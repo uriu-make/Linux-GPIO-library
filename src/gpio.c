@@ -60,3 +60,7 @@ unsigned char ParallelRead(int fd) {
   ioctl(parallel.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
   return data.values;
 }
+
+void GPIOclose(void) {
+  free(req);
+}
