@@ -10,6 +10,13 @@
 #include <unistd.h>
 #include <stdarg.h>
 
+#define INPUT (1UL << 0)
+#define INPUT_PULLUP (1UL << 5)
+#define INPUT_PULLDOWN (1UL << 6)
+#define OUTPUT (1UL << 1)
+#define HIGH 1
+#define LOW 0
+
 int gpioSetup(char *device);
 int pinMode(int pin, int mode);
 int setupParallel(int No_pins, int mode, int pin, ...);  //No. of pins. return parallel fd
