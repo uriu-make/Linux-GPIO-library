@@ -10,18 +10,24 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-#define INPUT (1UL << 0)
-#define INPUT_PULLUP (1UL << 5)
-#define INPUT_PULLDOWN (1UL << 6)
-#define OUTPUT (1UL << 1)
+#define INPUT GPIOHANDLE_REQUEST_INPUT
+// #define INPUT_PULLUP
+// #define INPUT_PULLDOWN
+#define OUTPUT GPIOHANDLE_REQUEST_OUTPUT
 #define HIGH 1
 #define LOW 0
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 int gpioSetup(char *device);
-int pinMode(int pin, int mode);
-int setupParallel(int num, int mode, int pin, ...);  //No. of pins. return parallel fd
+int pinMode(int pin, unsigned int mode);
+int setupParallel(unsigned int count, unsigned int mode, int pin, ...);  //No. of pins. return parallel fd
 int digitalWrite(int pin, int value);
 int digitalRead(int pin);
-int ParallelWrite(int fd, char *value);
-int ParallelRead(int fd);
+int ParallelWrite(int fd, unsigned char *value);
+unsigned char ParallelRead(int fd);
+#ifdef __cplusplus
+}
+#endif
 #endif
