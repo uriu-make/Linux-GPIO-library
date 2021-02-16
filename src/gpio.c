@@ -60,18 +60,18 @@ int digitalRead(int pin) {
   return (int)data.values;
 }
 
-int ParallelWrite(int fd, unsigned char *value) {
+int ParallelWrite(int fd_para, unsigned char *value) {
   parallel.fd = fd;
   memset(data.values, 0, sizeof(data.values));
   for (int i = 0; i < sizeof(value); i++)
     data.values[i] = value[i];
-  ioctl(parallel.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
+  ioctl(fd_para, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
 }
 
-unsigned char *ParallelRead(int fd) {
+unsigned char *ParallelRead(int fd_para) {
   parallel.fd = fd;
   memset(data.values, 0, sizeof(data.values));
-  ioctl(parallel.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
+  ioctl(fd_para, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
   return data.values;
 }
 
