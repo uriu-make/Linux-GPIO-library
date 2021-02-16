@@ -3,6 +3,8 @@
 #include <linux/gpio.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -18,11 +20,12 @@ extern "C" {
 #endif
 int gpioSetup(char *device);
 int pinMode(int pin, unsigned int mode);
-int setupParallel(unsigned int count, unsigned int mode, int pin, ...);  //No. of pins. return parallel fd
+int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel fd
+int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
 int digitalWrite(int pin, int value);
 int digitalRead(int pin);
 int ParallelWrite(int fd, unsigned char *value);
-unsigned char ParallelRead(int fd);
+unsigned char *ParallelRead(int fd);
 void GPIOclose(void);
 #ifdef __cplusplus
 }

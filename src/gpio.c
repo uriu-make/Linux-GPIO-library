@@ -1,48 +1,62 @@
 #include "gpio.h"
 int fd;
+int *fd_pin;
 struct gpiochip_info cinfo;
 struct gpioline_info linfo;
-struct gpiohandle_request *req;
 struct gpiohandle_request parallel;
 struct gpiohandle_data data;
 
 int gpioSetup(char *device) {
   int fd = open(device, O_RDWR);
   int ret = ioctl(fd, GPIO_GET_CHIPINFO_IOCTL, &cinfo);
-  req = malloc(cinfo.lines * sizeof(struct gpiohandle_request));
+  fd_pin = (int *)calloc(cinfo.lines, sizeof(int));
   return fd;
 }
 
 int pinMode(int pin, unsigned int mode) {
-  req[pin].lineoffsets[0] = pin;
-  req[pin].lines = 1;
-  req[pin].flags = mode;
-  return ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
+  struct gpiohandle_request req;
+  req.lineoffsets[0] = pin;
+  req.lines = 1;
+  req.flags = mode;
+  ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
+  return fd_pin[pin] = req.fd;
 }
 
-int setupParallel(unsigned int count, unsigned int mode, int pin, ...) {
+int setupParallelOut(unsigned int count, ...) {
   va_list ap;
-  double sum = 0;
   va_start(ap, count);
-  parallel.flags = va_arg(ap, unsigned int);
+  parallel.flags = OUTPUT;
   parallel.lines = count;
   for (int i = 0; i < count; i++) {
     parallel.lineoffsets[i] = va_arg(ap, int);
   }
   va_end(ap);
-  ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
+  ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &parallel);
+  return parallel.fd;
+}
+
+int setupParallelIn(unsigned int count, ...) {
+  va_list ap;
+  va_start(ap, count);
+  parallel.flags = INPUT;
+  parallel.lines = count;
+  for (int i = 0; i < count; i++) {
+    parallel.lineoffsets[i] = va_arg(ap, int);
+  }
+  va_end(ap);
+  ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &parallel);
   return parallel.fd;
 }
 
 int digitalWrite(int pin, int value) {
   memset(data.values, 0, sizeof(data.values));
   data.values[0] = value;
-  return ioctl(req[pin].fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
+  return ioctl(fd_pin[pin], GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
 }
 
 int digitalRead(int pin) {
   memset(data.values, 0, sizeof(data.values));
-  ioctl(req[pin].fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
+  ioctl(fd_pin[pin], GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
   return (int)data.values;
 }
 
@@ -54,7 +68,7 @@ int ParallelWrite(int fd, unsigned char *value) {
   ioctl(parallel.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
 }
 
-unsigned char ParallelRead(int fd) {
+unsigned char *ParallelRead(int fd) {
   parallel.fd = fd;
   memset(data.values, 0, sizeof(data.values));
   ioctl(parallel.fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
@@ -62,5 +76,5 @@ unsigned char ParallelRead(int fd) {
 }
 
 void GPIOclose(void) {
-  free(req);
+  free(fd_pin);
 }
