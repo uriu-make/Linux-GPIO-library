@@ -19,19 +19,25 @@
 #define HIGH 1
 #define LOW 0
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-int gpioSetup(char *device);
-int pinMode(int pin, unsigned int mode);
-int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel fd
-int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
-int digitalWrite(int pin, int value);
-int digitalRead(int pin);
-int ParallelWrite(int fd_para, unsigned char *value);
-unsigned char *ParallelRead(int fd_para);
-void GPIOclose(void);
-#ifdef __cplusplus
-}
-#endif
+class gpio {
+ public:
+  gpio(const char *device);
+  int gpioSetup();
+  int pinMode(int pin, unsigned int mode);
+  int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel fd
+  int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
+  int digitalWrite(int pin, int value);
+  int digitalRead(int pin);
+  int ParallelWrite(int fd_para, unsigned char *value);
+  unsigned char *ParallelRead(int fd_para);
+  void Close(void);
+
+ private:
+  int fd;
+  int *fd_pin;
+  char *device;
+  struct gpiochip_info cinfo;
+  struct gpioline_info linfo;
+  struct gpiohandle_data data;
+};
 #endif
