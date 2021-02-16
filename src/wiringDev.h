@@ -1,5 +1,5 @@
-#ifndef GPIO_H_INCLUDE
-#define GPIO_H_INCLUDE
+#ifndef WIRINGDEV_H_INCLUDE
+#define WIRINGDEV_H_INCLUDE
 #include <linux/gpio.h>
 #include <stdio.h>
 #include <sys/stat.h>

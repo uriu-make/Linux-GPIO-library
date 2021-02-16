@@ -1,4 +1,4 @@
-#include "gpio.h"
+#include "wiringDev.h"
 int fd;
 int *fd_pin;
 struct gpiochip_info cinfo;
