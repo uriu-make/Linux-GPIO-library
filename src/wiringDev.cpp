@@ -65,16 +65,18 @@ int gpio::digitalRead(int pin) {
 }
 
 int gpio::ParallelWrite(int fd_para, unsigned char *value) {
-  memset(data.values, 0, sizeof(data.values));
+  memset(this->data.values, 0, sizeof(this->data.values));
   for (int i = 0; i < sizeof(value); i++)
-    data.values[i] = value[i];
-  return ioctl(fd_para, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
+    this->data.values[i] = value[i];
+  return ioctl(fd_para, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
 }
 
-unsigned char *gpio::ParallelRead(int fd_para) {
-  memset(data.values, 0, sizeof(data.values));
-  ioctl(fd_para, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
-  return data.values;
+int gpio::ParallelRead(int fd_para, unsigned char *data) {
+  memset(this->data.values, 0, sizeof(this->data.values));
+  ioctl(fd_para, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
+  for (int i = 0; i < sizeof(data); i++)
+    data[i] = this->data.values[i];
+  return 0;
 }
 
 void gpio::Close(void) {
