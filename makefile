@@ -1,5 +1,5 @@
 install:
-	gcc -shared -fPIC src/wiringDev.c -o src/libwiringDev.so
+	gcc -shared -fPIC src/wiringDev.cpp -o src/libwiringDev.so
 	sudo cp src/wiringDev.h /usr/include/wiringDev.h
 	sudo cp src/libwiringDev.so /usr/lib/libwiringDev.so
 blink:
