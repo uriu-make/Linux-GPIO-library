@@ -1,6 +1,8 @@
 install:
-	gcc -shared -fPIC src/gpio.c -o src/libgpio.so
-	sudo cp src/gpio.h /usr/include/gpio.h
-	sudo cp src/libgpio.so /usr/lib/libgpio.so
+	gcc -shared -fPIC src/wiringDev.c -o src/libwiringDev.so
+	sudo cp src/wiringDev.h /usr/include/wiringDev.h
+	sudo cp src/libwiringDev.so /usr/lib/libwiringDev.so
 blink:
-	gcc example/blink.c -o example/blink.o -lgpio
+	gcc example/blink.c -o example/blink.o -lwiringDev
+blink2:
+	gcc example/blink2.c -o example/blink2.o -lwiringDev
