@@ -28,13 +28,9 @@ int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel f
 int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
 int digitalWrite(int pin, int value);
 int digitalRead(int pin);
-int ParallelWrite(int fd, unsigned char *value);
-<<<<<<< HEAD
-unsigned char *ParallelRead(int fd);
+int ParallelWrite(int paranum, unsigned char *value);
+unsigned char *ParallelRead(int paranum);
 void GPIOclose(void);
-=======
-unsigned char ParallelRead(int fd);
->>>>>>> parent of 5cde802... update
 #ifdef __cplusplus
 }
 #endif
