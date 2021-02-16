@@ -4,7 +4,12 @@
 int main(void) {
   gpioSetup("/dev/gpiochip0");
   pinMode(25, OUTPUT);
-  usleep(60 * 1000 * 1000);
+  for (int i; i < 1000; i++) {
+    digitalWrite(25, LOW);
+    usleep(1000000);
+    digitalWrite(25, HIGH);
+    usleep(1000000);
+  }
   GPIOclose();
   return 0;
 }

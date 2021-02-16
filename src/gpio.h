@@ -12,10 +12,10 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-#define INPUT GPIOHANDLE_REQUEST_INPUT
+#define INPUT 0
 // #define INPUT_PULLUP
 // #define INPUT_PULLDOWN
-#define OUTPUT GPIOHANDLE_REQUEST_OUTPUT
+#define OUTPUT 1
 #define HIGH 1
 #define LOW 0
 
@@ -28,8 +28,8 @@ int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel f
 int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
 int digitalWrite(int pin, int value);
 int digitalRead(int pin);
-int ParallelWrite(int paranum, unsigned char *value);
-unsigned char *ParallelRead(int paranum);
+int ParallelWrite(int fd_para, unsigned char *value);
+unsigned char *ParallelRead(int fd_para);
 void GPIOclose(void);
 #ifdef __cplusplus
 }
