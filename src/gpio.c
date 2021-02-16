@@ -73,8 +73,11 @@ unsigned char *ParallelRead(int fd_para) {
   memset(data.values, 0, sizeof(data.values));
   ioctl(fd_para, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
   return data.values;
+<<<<<<< HEAD
 }
 
 void GPIOclose(void) {
   free(fd_pin);
+=======
+>>>>>>> parent of 5cde802... update
 }
