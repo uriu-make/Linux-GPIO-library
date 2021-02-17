@@ -1,4 +1,4 @@
-#include "wiringDev.h"
+#include "gpiodev.h"
 
 gpio::gpio(const char *device) {
   this->device = (char *)device;

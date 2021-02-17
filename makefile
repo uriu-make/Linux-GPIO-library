@@ -1,11 +1,9 @@
 install:
-	gcc -shared -fPIC src/wiringDev.cpp -o src/libwiringDev.so
-	sudo cp src/wiringDev.h /usr/include/wiringDev.h
-	sudo cp src/libwiringDev.so /usr/lib/libwiringDev.so
+	gcc -shared -fPIC src/gpiodev.cpp -o src/libgpiodev.so
+	sudo cp src/gpiodev.h /usr/include/gpiodev.h
+	sudo cp src/libgpiodev.so /usr/lib/libgpiodev.so
 blink:
-	gcc example/blink.cpp -o example/blink.o -lwiringDev
-blink2:
-	gcc example/blink2.cpp -o example/blink2.o -lwiringDev
+	gcc example/blink.cpp -o example/blink.o -lgpiodev
 paralleltest:
-	gcc example/paralleltest.cpp -o example/paralleltest.o -lwiringDev
+	gcc example/paralleltest.cpp -o example/paralleltest.o -lgpiodev
 all: install blink blink2 paralleltest

@@ -1,4 +1,4 @@
-#include <wiringDev.h>
+#include <gpiodev.h>
 #include <unistd.h>
 #include <stdio.h>
 
