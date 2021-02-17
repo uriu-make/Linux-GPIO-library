@@ -7,3 +7,4 @@ blink:
 paralleltest:
 	gcc example/paralleltest.cpp -o example/paralleltest.o -lgpiodev
 all: install blink blink2 paralleltest
+examples: blink paralleltest
