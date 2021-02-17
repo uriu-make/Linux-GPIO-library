@@ -11,6 +11,6 @@ int main(void) {
     gpiochip0.digitalWrite(25, HIGH);
     usleep(1000000);
   }
-  gpiochip0.Close();
+  gpiochip0.Closedev();
   return 0;
 }

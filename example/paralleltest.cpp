@@ -19,6 +19,8 @@ int main(void) {
       value[i] = !value[i];
     usleep(1000000);
   }
-  gpiochip0.Close();
+  gpiochip0.CloseSpecialIO(fd1);
+  gpiochip0.CloseSpecialIO(fd2);
+  gpiochip0.Closedev();
   return 0;
 }
