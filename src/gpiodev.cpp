@@ -52,6 +52,17 @@ int gpio::setupParallelIn(unsigned int count, ...) {
   return parallel.fd;
 }
 
+int gpio::setEvent(int pin, int mode) {
+  struct gpioevent_request event;
+  event.lineoffset = pin;
+  if (mode == RISING)
+    event.eventflags = GPIOEVENT_EVENT_RISING_EDGE;
+  else if (mode == FALLING)
+    event.eventflags = GPIOEVENT_EVENT_FALLING_EDGE;
+  ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &event);
+  return event.fd;
+}
+
 int gpio::digitalWrite(int pin, int value) {
   memset(data.values, 0, sizeof(data.values));
   data.values[0] = value;
@@ -64,22 +75,30 @@ int gpio::digitalRead(int pin) {
   return (int)data.values[0];
 }
 
-int gpio::ParallelWrite(int fd_para, unsigned char *value) {
+int gpio::ParallelWrite(int para_num, unsigned char *value) {
   memset(this->data.values, 0, sizeof(this->data.values));
   for (int i = 0; i < sizeof(value); i++)
     this->data.values[i] = value[i];
-  return ioctl(fd_para, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
+  return ioctl(para_num, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
 }
 
-int gpio::ParallelRead(int fd_para, unsigned char *data) {
+int gpio::ParallelRead(int para_num, unsigned char *data) {
   memset(this->data.values, 0, sizeof(this->data.values));
-  ioctl(fd_para, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
+  ioctl(para_num, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
   for (int i = 0; i < sizeof(data); i++)
     data[i] = this->data.values[i];
   return 0;
 }
 
-int gpio::Close(void) {
+int gpio::CloseSpecialIO(int num) {
+  return close(num);
+}
+
+int gpio::Closedev(void) {
+  for (int i = 0; i < cinfo.lines; i++) {
+    if (int ret = close(fd_pin[i]) < 0)
+      return ret;
+  }
   free(fd_pin);
   return close(fd);
 }

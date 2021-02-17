@@ -18,6 +18,8 @@
 #define OUTPUT 1
 #define HIGH 1
 #define LOW 0
+#define RISING 1
+#define FALLING 0
 
 class gpio {
  public:
@@ -26,11 +28,14 @@ class gpio {
   int pinMode(int pin, unsigned int mode);
   int setupParallelOut(unsigned int count, ...);  //No. of pins. return parallel fd
   int setupParallelIn(unsigned int count, ...);   //No. of pins. return parallel fd
+  int setEvent(int pin, int mode);
   int digitalWrite(int pin, int value);
   int digitalRead(int pin);
-  int ParallelWrite(int fd_para, unsigned char *value);
-  int ParallelRead(int fd_para, unsigned char *value);
-  int Close(void);
+  int ParallelWrite(int para_num, unsigned char *value);
+  int ParallelRead(int para_num, unsigned char *value);
+  int getEventTimestamp(int event_num);
+  int CloseSpecialIO(int num);
+  int Closedev(void);
 
  private:
   int fd;
