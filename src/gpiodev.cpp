@@ -59,6 +59,8 @@ int gpio::setEvent(int pin, int mode) {
     event.eventflags = GPIOEVENT_EVENT_RISING_EDGE;
   else if (mode == FALLING)
     event.eventflags = GPIOEVENT_EVENT_FALLING_EDGE;
+  else if (mode == BOTH)
+    event.eventflags = GPIOEVENT_REQUEST_BOTH_EDGES;
   ioctl(fd, GPIO_GET_LINEEVENT_IOCTL, &event);
   return event.fd;
 }
@@ -88,6 +90,15 @@ int gpio::ParallelRead(int para_num, unsigned char *data) {
   for (int i = 0; i < sizeof(data); i++)
     data[i] = this->data.values[i];
   return 0;
+}
+
+int gpio::getEvent(int event_num, struct gpioevent_data *data) {
+  int ret = read(event_num, data, sizeof(data));
+  if (data[0].id == GPIOEVENT_EVENT_RISING_EDGE)
+    data[0].id = RISING;
+  else if (data[0].id == GPIOEVENT_EVENT_FALLING_EDGE)
+    data[0].id = FALLING;
+  return ret;
 }
 
 int gpio::CloseSpecialIO(int num) {
