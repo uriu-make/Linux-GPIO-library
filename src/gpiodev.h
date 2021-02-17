@@ -30,7 +30,7 @@ class gpio {
   int digitalRead(int pin);
   int ParallelWrite(int fd_para, unsigned char *value);
   int ParallelRead(int fd_para, unsigned char *value);
-  void Close(void);
+  int Close(void);
 
  private:
   int fd;

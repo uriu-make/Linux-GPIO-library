@@ -79,7 +79,7 @@ int gpio::ParallelRead(int fd_para, unsigned char *data) {
   return 0;
 }
 
-void gpio::Close(void) {
+int gpio::Close(void) {
   free(fd_pin);
-  close(fd);
+  return close(fd);
 }
