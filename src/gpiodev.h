@@ -1,9 +1,6 @@
 #ifndef GPIODEV_H_INCLUDE
 #define GPIODEV_H_INCLUDE
 #include <linux/gpio.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <stdlib.h>
