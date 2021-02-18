@@ -22,6 +22,11 @@
 #define RISING 1
 #define FALLING 0
 
+typedef struct {
+  unsigned long long timestamp;
+  unsigned int id;
+} event;
+
 class gpio {
  public:
   gpio(const char *device);
@@ -34,7 +39,7 @@ class gpio {
   int digitalRead(int pin);
   int ParallelWrite(int para_num, unsigned char *value);
   int ParallelRead(int para_num, unsigned char *value);
-  int getEvent(int event_num, struct gpioevent_data *data);
+  int getEvent(int event_num, event *data);
   int CloseSpecialIO(int num);
   int Closedev(void);
 

@@ -92,7 +92,7 @@ int gpio::ParallelRead(int para_num, unsigned char *data) {
   return 0;
 }
 
-int gpio::getEvent(int event_num, struct gpioevent_data *data) {
+int gpio::getEvent(int event_num, event *data) {
   int ret = read(event_num, data, sizeof(data));
   if (data[0].id == GPIOEVENT_EVENT_RISING_EDGE)
     data[0].id = RISING;
