@@ -6,5 +6,7 @@ blink:
 	gcc example/blink.cpp -o example/blink.o -lgpiodev
 paralleltest:
 	gcc example/paralleltest.cpp -o example/paralleltest.o -lgpiodev
-all: install blink blink2 paralleltest
-examples: blink paralleltest
+event:
+	gcc example/event.cpp -o example/event.o -lgpiodev
+all: install blink paralleltest event
+examples: blink paralleltest event
