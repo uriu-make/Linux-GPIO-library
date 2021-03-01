@@ -14,11 +14,36 @@ int gpio::pinMode(int pin, unsigned int mode) {
   struct gpiohandle_request req;
   req.lineoffsets[0] = pin;
   req.lines = 1;
-  if (mode != INPUT)
-    req.flags = GPIOHANDLE_REQUEST_OUTPUT;
-  else
-    req.flags = GPIOHANDLE_REQUEST_INPUT;
-  req.default_values[0] = 1;
+  switch (mode) {
+    case INPUT:
+      req.flags = GPIOHANDLE_REQUEST_INPUT;
+      break;
+    case OUTPUT:
+      req.flags = GPIOHANDLE_REQUEST_OUTPUT;
+      break;
+    case ACTIVE_LOW:
+      req.flags = GPIOHANDLE_REQUEST_ACTIVE_LOW;
+      break;
+    case OPEN_DRAIN:
+      req.flags = GPIOHANDLE_REQUEST_OPEN_DRAIN;
+      break;
+    case OPEN_SOURCE:
+      req.flags = GPIOHANDLE_REQUEST_OPEN_SOURCE;
+      break;
+    case INPUT_PULLUP:
+      req.flags = GPIOHANDLE_REQUEST_OUTPUT;
+      req.default_values[0] = 1;
+      ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
+      req.flags = GPIOHANDLE_REQUEST_INPUT;
+      break;
+    case INPUT_PULLDOWN:
+      req.flags = GPIOHANDLE_REQUEST_OUTPUT;
+      req.default_values[0] = 0;
+      ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
+      req.flags = GPIOHANDLE_REQUEST_INPUT;
+      break;
+  }
+
   ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
   fd_pin[pin] = req.fd;
   return fd_pin[pin];
