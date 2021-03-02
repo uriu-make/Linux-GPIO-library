@@ -14,8 +14,7 @@
 #define ACTIVE_LOW 2
 #define OPEN_DRAIN 3
 #define OPEN_SOURCE 4
-#define INPUT_PULLUP 5
-#define INPUT_PULLDOWN 6
+
 #define HIGH 1
 #define LOW 0
 #define RISING 1

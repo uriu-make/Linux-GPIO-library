@@ -30,18 +30,6 @@ int gpio::pinMode(int pin, unsigned int mode) {
     case OPEN_SOURCE:
       req.flags = GPIOHANDLE_REQUEST_OPEN_SOURCE;
       break;
-    case INPUT_PULLUP:
-      req.flags = GPIOHANDLE_REQUEST_OUTPUT;
-      req.default_values[0] = 1;
-      ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
-      req.flags = GPIOHANDLE_REQUEST_INPUT;
-      break;
-    case INPUT_PULLDOWN:
-      req.flags = GPIOHANDLE_REQUEST_OUTPUT;
-      req.default_values[0] = 0;
-      ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
-      req.flags = GPIOHANDLE_REQUEST_INPUT;
-      break;
   }
 
   ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &req);
