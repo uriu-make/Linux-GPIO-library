@@ -9,4 +9,4 @@ To build examples.
 make examples
 ```
 ## Reference
-<!-- [Reference](Reference.md) -->
+[Reference](Reference.md)
