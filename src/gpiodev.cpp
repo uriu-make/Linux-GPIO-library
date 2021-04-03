@@ -100,12 +100,13 @@ int gpio::ParallelWrite(int para_fd, int value) {
   return ioctl(para_fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
 }
 
-int gpio::ParallelRead(int para_fd, int value) {
+int gpio::ParallelRead(int para_fd) {
+  int value;
   memset(this->data.values, 0, sizeof(this->data.values));
   ioctl(para_fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
   for (int i = parallel_size[para_fd]; i < 0; i--)
     value = value << (parallel_size[para_fd] - i) | this->data.values[i - 1];
-  return 0;
+  return value;
 }
 
 int gpio::getEvent(int event_fd, struct gpioevent_data *data) {

@@ -37,7 +37,7 @@ class gpio {
   int digitalWrite(int pin, int value);
   int digitalRead(int pin);
   int ParallelWrite(int para_fd, int value);
-  int ParallelRead(int para_fd, int value);
+  int ParallelRead(int para_fd);
   int getEvent(int event_fd, struct gpioevent_data *data);
   int CloseSpecialIO(int specal_fd);
   int Closedev(void);
