@@ -3,10 +3,10 @@
 gpio::gpio(const char *device) {
   this->device = (char *)device;
 }
+
 int gpio::gpioSetup() {
   fd = open(device, O_RDWR);
   int ret = ioctl(fd, GPIO_GET_CHIPINFO_IOCTL, &cinfo);
-  fd_pin = (int *)calloc(cinfo.lines, sizeof(int));
   return fd;
 }
 
@@ -48,6 +48,7 @@ int gpio::setupParallelOut(unsigned int count, ...) {
   }
   va_end(ap);
   ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &parallel);
+  parallel_size[parallel.fd] = count;
   return parallel.fd;
 }
 
@@ -62,6 +63,7 @@ int gpio::setupParallelIn(unsigned int count, ...) {
   }
   va_end(ap);
   ioctl(fd, GPIO_GET_LINEHANDLE_IOCTL, &parallel);
+  parallel_size[parallel.fd] = count;
   return parallel.fd;
 }
 
@@ -91,23 +93,23 @@ int gpio::digitalRead(int pin) {
   return (int)data.values[0];
 }
 
-int gpio::ParallelWrite(int para_num, unsigned char *value) {
+int gpio::ParallelWrite(int para_fd, int value) {
   memset(this->data.values, 0, sizeof(this->data.values));
-  for (int i = 0; i < sizeof(value); i++)
-    this->data.values[i] = value[i];
-  return ioctl(para_num, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
+  for (int i = parallel_size[para_fd]; i < 0; i--)
+    this->data.values[i - 1] = value >> (parallel_size[para_fd] - i) & 0b1;
+  return ioctl(para_fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
 }
 
-int gpio::ParallelRead(int para_num, unsigned char *data) {
+int gpio::ParallelRead(int para_fd, int value) {
   memset(this->data.values, 0, sizeof(this->data.values));
-  ioctl(para_num, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
-  for (int i = 0; i < sizeof(data); i++)
-    data[i] = this->data.values[i];
+  ioctl(para_fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
+  for (int i = parallel_size[para_fd]; i < 0; i--)
+    value = value << (parallel_size[para_fd] - i) | this->data.values[i - 1];
   return 0;
 }
 
-int gpio::getEvent(int event_num, struct gpioevent_data *data) {
-  int ret = read(event_num, data, sizeof(struct gpioevent_data));
+int gpio::getEvent(int event_fd, struct gpioevent_data *data) {
+  int ret = read(event_fd, data, sizeof(struct gpioevent_data));
   if (data->id == GPIOEVENT_EVENT_RISING_EDGE)
     data->id = RISING;
   else if (data->id == GPIOEVENT_EVENT_FALLING_EDGE)
@@ -115,8 +117,8 @@ int gpio::getEvent(int event_num, struct gpioevent_data *data) {
   return ret;
 }
 
-int gpio::CloseSpecialIO(int num) {
-  return close(num);
+int gpio::CloseSpecialIO(int specal_fd) {
+  return close(specal_fd);
 }
 
 int gpio::Closedev(void) {
@@ -124,6 +126,5 @@ int gpio::Closedev(void) {
     if (int ret = close(fd_pin[i]) < 0)
       return ret;
   }
-  free(fd_pin);
   return close(fd);
 }

@@ -36,15 +36,15 @@ class gpio {
   int setEvent(int pin, int mode);
   int digitalWrite(int pin, int value);
   int digitalRead(int pin);
-  int ParallelWrite(int para_num, unsigned char *value);
-  int ParallelRead(int para_num, unsigned char *value);
-  int getEvent(int event_num, struct gpioevent_data *data);
-  int CloseSpecialIO(int num);
+  int ParallelWrite(int para_fd, int value);
+  int ParallelRead(int para_fd, int value);
+  int getEvent(int event_fd, struct gpioevent_data *data);
+  int CloseSpecialIO(int specal_fd);
   int Closedev(void);
 
  private:
   int fd;
-  int *fd_pin;
+  int fd_pin[GPIOHANDLES_MAX], parallel_size[GPIOHANDLES_MAX];
   char *device;
   struct gpiochip_info cinfo;
   struct gpioline_info linfo;
