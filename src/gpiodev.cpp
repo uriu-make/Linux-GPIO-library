@@ -95,17 +95,18 @@ int gpio::digitalRead(int pin) {
 
 int gpio::ParallelWrite(int para_fd, int value) {
   memset(this->data.values, 0, sizeof(this->data.values));
-  for (int i = parallel_size[para_fd]; i < 0; i--)
-    this->data.values[i - 1] = value >> (parallel_size[para_fd] - i) & 0b1;
+  for (int i = 0; i < parallel_size[para_fd]; i++) {
+    this->data.values[i] = value >> (parallel_size[para_fd] - i - 1) & 0b00000001;
+  }
   return ioctl(para_fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &this->data);
 }
 
 int gpio::ParallelRead(int para_fd) {
-  int value;
+  int value = 0;
   memset(this->data.values, 0, sizeof(this->data.values));
   ioctl(para_fd, GPIOHANDLE_GET_LINE_VALUES_IOCTL, &this->data);
-  for (int i = parallel_size[para_fd]; i < 0; i--)
-    value = value << (parallel_size[para_fd] - i) | this->data.values[i - 1];
+  for (int i = 0; i < parallel_size[para_fd]; i++)
+    value = value << 1 | this->data.values[i];
   return value;
 }
 
