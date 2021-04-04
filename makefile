@@ -5,7 +5,7 @@ install:
 blink:
 	gcc example/blink.cpp -o example/blink.o -lgpiodev
 input:
-	gcc example/Input.cpp -o example/Input.o -lgpiodev
+	gcc example/input.cpp -o example/input.o -lgpiodev
 paralleltest:
 	gcc example/paralleltest.cpp -o example/paralleltest.o -lgpiodev
 event:
