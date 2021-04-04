@@ -11,13 +11,11 @@ int main(void) {
   int fd1 = gpiochip0.setupParallelOut(4, 20, 21, 22, 23);
   int fd2 = gpiochip0.setupParallelIn(4, 24, 25, 26, 27);
 
-  int value = 0b1010;
-  int data = 0;
-  for (int i = 0; i < 10; i++) {
-    gpiochip0.ParallelWrite(fd1, value);
-    data = gpiochip0.ParallelRead(fd2);
-    printf("output:0b%d,input:0b%d\n", dec2bin(value), dec2bin(data));
-    value = ~value & 0b1111;
+  int value = 0;
+  for (int i = 0; i < 16; i++) {
+    gpiochip0.ParallelWrite(fd1, i);
+    value = gpiochip0.ParallelRead(fd2);
+    printf("output:0b%d,input:0b%d\n", dec2bin(i), dec2bin(value));
     usleep(1000000);
   }
   gpiochip0.CloseSpecialIO(fd1);
